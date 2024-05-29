@@ -1,0 +1,250 @@
+import discord
+from discord.ext import commands
+import random
+import requests
+from botlogic import pass_gen
+from botlogic import is_prime
+
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='$', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}') ('{bot.user.id}')
+    print('------')
+
+    await bot.tree.sync()
+
+@bot.tree.command()
+async def hi(ctx : discord.Interaction) :
+    await ctx.response.send_message('Hi')
+
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Hi! I am a bot {bot.user}!')
+
+@bot.command()
+async def heh(ctx, count_heh = 5):
+    await ctx.send("he" * count_heh)
+
+@bot.command()
+async def passgen(ctx):
+    await ctx.send('halo berikut password kamu')
+    await ctx.send(pass_gen(10))
+
+@bot.command()
+async def pangkatdua(ctx):
+    await ctx.send('masukan angka bebas, nanti aku hitung pangkat 2 nya')
+    message = (await bot.wait_for("message", check=lambda m: m.author == ctx.author and m.channel == ctx.channel))
+    await ctx.send(f'pangkat dua dari angka yang kamu kirimkan adalah {(int(message.content)**2)}')
+
+@bot.command()
+async def bilangan_prima(ctx, angka: int):
+    if is_prime(angka):
+        await ctx.send('ini bilangan prima') 
+    else:
+           await ctx.send('ini bukan bilangan prima')
+
+@bot.command()
+async def meme(ctx):
+    import random, os
+    img_name = random.choice(os.listdir('images'))
+    with open(f'images/{img_name}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
+@bot.command()
+async def animals(ctx):
+    import random, os
+    img_name = random.choice(os.listdir('animals'))
+    with open(f'animals/{img_name}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
+
+
+def get_duck_image_url():  
+    import requests  
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+
+@bot.command('duck')
+async def duck(ctx):
+    '''Setelah kita memanggil perintah bebek (duck), program akan memanggil fungsi get_duck_image_url'''
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
+
+@bot.event
+async def on_ready():
+    print(f'Bot {bot.user} telah siap!')
+
+def find_factors(number):
+    factors = []
+    for i in range(1, number + 1):
+        if number % i == 0:
+            factors.append(i)
+    return factors
+
+@bot.command(name='factors')
+async def factors(ctx, number: int):
+    factors_list = find_factors(number)
+    await ctx.send(f'Faktor dari {number} adalah: {factors_list}')
+
+@bot.command(name='biner')
+async def binary(ctx, number: int):
+    biner_number = bin(number).replace("0b", "")
+    await ctx.send(f'Biner dari {number} adalah: {biner_number}')
+
+
+
+gombal_list = ["Kamu tahu nggak? Aku barusan beli peta, soalnya aku selalu tersesat di matamu.",
+                "Aku nggak butuh kafein, kamu sudah cukup membuatku terjaga sepanjang malam.",
+                "Kalau kamu jadi senar gitar, aku bakal jadi gitaris yang nggak pernah mau berhenti bermain.",
+                "Kamu itu seperti kopi, selalu membuatku terjaga dan bersemangat.",
+                "Kalau kamu jadi hujan, aku mau jadi payung yang selalu melindungi kamu.",
+                "Kamu adalah alasanku percaya bahwa cinta pada pandangan pertama itu nyata.",
+                "Setiap kali aku melihatmu, aku merasa sedang melihat keajaiban.",
+                "Kalau cinta itu seperti matematika, maka kamu adalah solusi dari semua masalahku.",
+                "Kamu itu seperti wifi, aku selalu merasa terhubung kalau dekat denganmu.",
+                "Aku nggak perlu kompas untuk menemukan arah, cukup ikuti hatiku yang selalu mengarah ke kamu.",
+                "Kamu adalah alasan mengapa aku percaya bahwa ada sesuatu yang baik di setiap harinya.",
+                "Kalau aku jadi pilot, kamu pasti landasan pacuku, tempatku selalu ingin kembali.",
+                "Aku nggak butuh lampu jalan kalau kamu ada di sampingku, kamu sudah cukup menerangiku.",
+                "Kalau kamu jadi bintang, aku mau jadi langit yang selalu memelukmu.",
+                "Kamu adalah alasan mengapa aku percaya pada keajaiban.",
+                "Kamu itu seperti udara, aku nggak bisa hidup tanpamu.",
+                "Kalau cinta itu adalah seni, maka kamu adalah masterpiece-nya.",
+                "Aku nggak butuh peta, karena hatiku selalu tahu jalan menuju hatimu.",
+                "Kamu adalah alasan mengapa aku percaya bahwa ada surga di dunia ini.",
+                "Kalau kamu jadi buku, aku akan menjadi perpustakaan yang selalu menyimpanmu."
+                "Kamu itu seperti gula, selalu membuat hidupku manis.",
+                "Aku nggak butuh alarm kalau ada kamu, kamu adalah alasan aku selalu bangun pagi dengan senyuman.",
+                "Kalau kamu jadi bunga, aku mau jadi lebah yang selalu mengagumi keindahanmu.",
+                "Kamu adalah alasan mengapa aku selalu merasa bahagia tanpa alasan.",
+                "Kalau cinta itu seperti musik, kamu adalah lagu favoritku.",
+                "Kamu itu seperti lilin di dalam kegelapan, selalu menerangi jalanku.",
+                "Aku nggak butuh mimpi indah kalau ada kamu di kenyataanku.",
+                "Kalau kamu jadi warna, aku mau jadi pelangi yang selalu ada di sekitarmu.",
+                "Kamu adalah alasan mengapa aku percaya bahwa cinta sejati itu ada.",
+                "Kalau kamu jadi matahari, aku mau jadi planet yang selalu berputar di sekitarmu.",
+                "Kamu itu seperti magnet, aku selalu tertarik padamu.",
+                "Aku nggak butuh pahlawan super kalau ada kamu, kamu sudah cukup menjadi pahlawanku.",
+                "Kalau kamu jadi es krim, aku mau jadi cone-nya yang selalu memelukmu.",
+                "Kamu adalah alasan mengapa aku selalu merasa beruntung setiap harinya.",
+                "Kalau cinta itu adalah puisi, kamu adalah kata-kata terindah di dalamnya.",
+                "Kamu itu seperti angin, aku selalu merasa nyaman setiap kali kamu ada di sekitarku.",
+                "Aku nggak butuh film romantis kalau ada kamu, kisah kita sudah cukup indah.",
+                "Kalau kamu jadi hujan, aku mau jadi tanah yang selalu menantimu.",
+                "Kamu adalah alasan mengapa aku selalu merasa hangat di tengah dinginnya dunia.",
+                "Kalau cinta itu adalah taman, kamu adalah bunga terindah di dalamnya.",
+                "Kamu itu seperti sinar matahari pagi, selalu memberikan harapan baru.",
+                "Aku nggak butuh bintang jatuh kalau ada kamu, kamu adalah keinginanku yang terkabul.",
+                "Kalau kamu jadi mimpi, aku mau tidur selamanya hanya untuk bersamamu.",
+                "Kamu adalah alasan mengapa aku percaya bahwa kebahagiaan itu sederhana.",
+                "Kalau cinta itu adalah perjalanan, kamu adalah tujuan akhirnya.",
+                "Kamu itu seperti kue coklat, selalu membuatku ketagihan.",
+                "Aku nggak butuh peta harta karun kalau ada kamu, kamu adalah harta karunku.",
+                "Kalau kamu jadi lagu, aku mau jadi melodi yang selalu menyatu denganmu.",
+                "Kamu adalah alasan mengapa aku percaya bahwa cinta itu abadi."]
+
+nama_pengguna = " "
+
+@bot.event
+async def on_ready():
+    print(f'Sudah login sebagai {bot.user}')
+
+@bot.command()
+async def gombal(ctx):
+    gombalan = random.choice(gombal_list)
+    await ctx.send(f"{ctx.author.name}, {gombalan}")
+
+
+puisi_list = ["Di bawah sinar rembulan,\nCinta kita berdua,\nTak lekang oleh waktu,\nBersinar selamanya.",
+                "Seperti bintang di langit malam,\nCinta kita berkilauan,\nAbadi dan tak tergoyahkan,\nSeindah mimpi-mimpi kita.",
+                "Setiap detik bersamamu,\nAdalah anugerah yang indah,\nKamu adalah inspirasiku,\nDalam setiap bait puisiku.",
+                "Dalam setiap hembusan angin,\nAda rindu yang mengalir,\nMembawa namamu dalam hatiku,\nKekasih yang selalu kurindu.",
+                "Di taman cinta kita,\nBunga-bunga bermekaran,\nHarum kasih sayangmu,\nMenghiasi hari-hariku.",
+                "Cinta kita adalah simfoni,\nAlunan nada yang indah,\nMengisi ruang hati,\nDengan kebahagiaan abadi.",
+                "Seperti matahari terbit,\nKehadiranmu menyinari hidupku,\nMenghangatkan setiap sudut,\nDengan cinta yang tulus.",
+                "Kau adalah mata air,\nDi padang hatiku yang kering,\nMenyegarkan jiwa ini,\nDengan kasih sayangmu yang suci.",
+                "Dalam pelukanmu,\nAku menemukan damai,\nCinta yang tak tergoyahkan,\nDalam setiap detak jantungku.",
+                "Cinta kita adalah pelangi,\nWarna-warni yang mempesona,\nMenghiasi hidup ini,\nDengan keindahan tak terperi.",
+                "Di setiap langkahku,\nKau adalah cahaya penuntun,\nMengiringi perjalanan,\nMenuju kebahagiaan abadi.:",
+                "Seperti daun yang gugur,\nCintaku takkan pernah layu,\nSelalu segar dan mekar,\nDalam hati yang mencintaimu.",
+                "Kau adalah puisi terindah,\nDalam buku hidupku,\nSetiap bait dan kata,\nAdalah ungkapan cinta untukmu.",
+                "Dalam senyummu,\nAku menemukan kebahagiaan,\nCinta yang tulus,\nMengisi hari-hariku.",
+                "Seperti ombak di lautan,\nCintaku tak pernah berhenti,\nSelalu bergerak dan mengalir,\nMenuju pantai hatimu.",
+                "Kau adalah melodi,\nDalam lagu hidupku,\nMengisi setiap nada,\nDengan cinta yang sempurna.",
+                "Dalam setiap tatapanmu,\nAku menemukan cinta,\nYang tulus dan suci,\nMenghiasi setiap detik hidupku.",
+                "Seperti hujan yang turun,\nCintamu membasahi jiwaku,\nMenyegarkan setiap hari,\nDengan kasih sayangmu.",
+                "Kau adalah bintang,\nDi langit malamku,\nSelalu bersinar terang,\nMenerangi jalan hidupku.",
+                "Dalam setiap pelukan,\nAku merasakan kehangatan,\nCinta yang tak terucapkan,\nNamun begitu nyata.",
+                "Seperti angin yang berhembus,\nCintamu menyentuh hatiku,\nMengisi ruang kosong,\nDengan kasih yang tulus.",
+                "Kau adalah bunga,\nDi taman hatiku,\nSelalu mekar indah,\nDengan cinta yang abadi.",
+                "Dalam setiap kata,\nAda cinta yang terungkap,\nMengalir seperti sungai,\nMenuju samudra hatimu.",
+                "Seperti mentari pagi,\nCintamu menghangatkan hidupku,\nMengusir kegelapan,\nDengan cahaya yang suci.",
+                "Kau adalah cahaya,\nDalam kegelapan hidupku,\nSelalu bersinar terang,\nMenerangi setiap langkahku.",
+                "Dalam setiap detak jantung,\nAda namamu yang terukir,\nMengisi setiap ruang,\nDengan cinta yang tulus.",
+                "Seperti pelangi setelah hujan,\nCintamu membawa warna,\nMenghiasi hidup ini,\nDengan kebahagiaan abadi.",
+                "Kau adalah nafas,\nDalam setiap helaan,\nMenghidupkan jiwa ini,\nDengan cinta yang suci.",
+                "Dalam setiap senyum,\nAda kebahagiaan yang tersembunyi,\nMengisi hari-hariku,\nDengan cinta yang tulus.",
+                "Seperti bintang jatuh,\nCintamu adalah harapan,\nMenghiasi malam,\nDengan keindahan yang abadi.",
+                "Kau adalah pelukan,\nDalam dinginnya malam,\nMemberikan kehangatan,\nDengan cinta yang tulus.",
+                "Dalam setiap langkah,\nAda jejak cinta kita,\nMengisi perjalanan hidup,\nDengan kebahagiaan abadi.",
+                "Seperti cahaya bulan,\nCintamu menenangkan hati,\nMengusir segala resah,\nDengan keindahan yang suci.",
+                "Kau adalah inspirasi,\nDalam setiap karya yang kubuat,\nMengisi hidup ini,\nDengan cinta yang tulus.",
+                "Dalam setiap tatapan,\nAda cinta yang terungkap,\nMengalir seperti sungai,\nMenuju samudra hatimu.",
+                "Seperti bunga yang mekar,\nCintamu selalu indah,\nMenghiasi hari-hariku,\nDengan kebahagiaan abadi.",
+                "Kau adalah harapan,\nDalam setiap doa yang kupanjatkan,\nMengisi hidup ini,\nDengan cinta yang tulus.",
+                "Dalam setiap pelukan,\nAku merasakan kehangatan,\nCinta yang tak terucapkan,\nNamun begitu nyata.",
+                "Seperti hujan yang turun,\nCintamu membasahi jiwaku,\nMenyegarkan setiap hari,\nDengan kasih sayangmu.",
+                "Kau adalah bintang,\nDi langit malamku,\nSelalu bersinar terang,\nMenerangi jalan hidupku.",
+                "Dalam setiap kata,\nAda cinta yang terungkap,\nMengalir seperti sungai,\nMenuju samudra hatimu.",
+                "Seperti mentari pagi,\nCintamu menghangatkan hidupku,\nMengusir kegelapan,\nDengan cahaya yang suci.",
+                "Kau adalah cahaya,\nDalam kegelapan hidupku,\nSelalu bersinar terang,\nMenerangi setiap langkahku.",
+                "Dalam setiap detak jantung,\nAda namamu yang terukir,\nMengisi setiap ruang,\nDengan cinta yang tulus.",
+                "Seperti pelangi setelah hujan,\nCintamu membawa warna,\nMenghiasi hidup ini,\nDengan kebahagiaan abadi.",
+                "Kau adalah nafas,\nDalam setiap helaan,\nMenghidupkan jiwa ini,\nDengan cinta yang suci.",
+                "Dalam setiap senyum,\nAda kebahagiaan yang tersembunyi,\nMengisi hari-hariku,\nDengan cinta yang tulus.",
+                "Seperti bintang jatuh,\nCintamu adalah harapan,\nMenghiasi malam,\nDengan keindahan yang abadi." ]
+
+@bot.event
+async def on_ready():
+    print(f'Sudah login sebagai {bot.user}')
+
+@bot.command()
+async def puisi(ctx):
+    puisi = random.choice(puisi_list)
+    await ctx.send(puisi)
+
+
+daur_ulang = ["koran", "majalah", "buku", "kotak kardus",
+              "botol plastik", "kantong plastik", "Wadah makanan", "wadah kosmetik",
+              "kaleng aluminium", "kaleng cat", "wajan dan panci stainless steel",
+              "kaca", "tekstil",
+              "sisa nasi", "sisa sayur", "sisa buah", 
+              "daun daun kering", "sampah tanaman"]
+
+@bot.command()
+async def cek_sampah(ctx):
+    await ctx.send('Apa sampah yang mau kamu periksa?')
+    message = await bot.wait_for('message', check=lambda m: m.author == ctx.author and m.channel == ctx.channel)
+    message = str(message.content)
+
+    # proses pemeriksaan
+    if message.lower() in daur_ulang:
+        await ctx.send('sampah tersebut harus di daur ulang, berikut tips daur ulang! ini beberapa ide yang dapat kamu gunakan')
+        await ctx.send('https://www.kompas.com/skola/read/2023/08/04/203000969/7-jenis-sampah-plastik-yang-dapat-didaur-ulang-beserta-contohnya')
+    else:
+        await ctx.send('sampah tersebut bisa dimusnahkan atau dibuang dengan bijak')
+        await ctx.send('https://berita.99.co/limbah-yang-tidak-dapat-didaur-ulang-adalah/')
