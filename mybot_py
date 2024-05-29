@@ -248,3 +248,5 @@ async def cek_sampah(ctx):
     else:
         await ctx.send('sampah tersebut bisa dimusnahkan atau dibuang dengan bijak')
         await ctx.send('https://berita.99.co/limbah-yang-tidak-dapat-didaur-ulang-adalah/')
+
+bot.run('fill with your token')
